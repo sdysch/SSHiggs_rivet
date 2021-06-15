@@ -16,6 +16,11 @@ namespace Rivet {
     /// Constructor
     DEFAULT_RIVET_ANALYSIS_CTOR(SSHiggs);
 
+	// lambda function to sort by pT
+	ParticleSorter ptsorter =  [](const Particle& a, const Particle& b) {
+		return a.pt() > b.pt();
+	};
+
 
     /// @name Analysis methods
     ///@{
@@ -51,9 +56,12 @@ namespace Rivet {
 
       // Book histograms
       // specify custom binning
-      book(_h["XXXX"], "myh1", 20, 0.0, 100.0);
-      book(_h["YYYY"], "myh2", logspace(20, 1e-2, 1e3));
-      book(_h["ZZZZ"], "myh3", {0.0, 1.0, 2.0, 4.0, 8.0, 16.0});
+      // lepton pT
+      book(_h["l0_pt"], "l0_pt", 200, 0.0, 1000.0);
+      book(_h["l1_pt"], "l1_pt", 200, 0.0, 1000.0);
+
+      // MET
+      book(_h["MET"], "MET", 100, 0.0, 500.0);
     }
 
 
@@ -61,10 +69,10 @@ namespace Rivet {
     void analyze(const Event& event) {
 
       // Retrieve dressed leptons, sorted by pT
-      vector<DressedLepton> leptons = apply<DressedLeptons>(event, "leptons").dressedLeptons();
+      vector<DressedLepton> leptons = apply<DressedLeptons>(event, "leptons").dressedLeptons(ptsorter);
 
       // Retrieve clustered jets, sorted by pT, with a minimum pT cut
-      Jets jets = apply<FastJets>(event, "jets").jetsByPt(Cuts::pT > 30*GeV);
+      Jets jets = apply<FastJets>(event, "jets").jetsByPt(Cuts::pT > 20*GeV);
 
       // Remove all jets within dR < 0.2 of a dressed lepton
       idiscardIfAnyDeltaRLess(jets, leptons, 0.2);
@@ -75,23 +83,27 @@ namespace Rivet {
       });
 
       // Veto event if there are no b-jets
-      if (bjets.empty())  vetoEvent;
+      //if (bjets.empty())  vetoEvent;
 
       // Apply a missing-momentum cut
-      if (apply<MissingMomentum>(event, "MET").missingPt() < 30*GeV)  vetoEvent;
+      //if (apply<MissingMomentum>(event, "MET").missingPt() < 30*GeV)  vetoEvent;
+      const auto MET = apply<MissingMomentum>(event, "MET").missingPt();
 
-      // Fill histogram with leading b-jet pT
-      _h["XXXX"]->fill(bjets[0].pT()/GeV);
+      // === fill histograms ===
+      _h["l0_pt"]->fill(leptons[0].pT()/GeV);
+      _h["l1_pt"]->fill(leptons[1].pT()/GeV);
+
+      _h["MET"]->fill(MET/GeV);
 
     }
 
 
     /// Normalise histograms etc., after the run
     void finalize() {
-
-      normalize(_h["XXXX"]); // normalize to unity
-      normalize(_h["YYYY"], crossSection()/picobarn); // normalize to generated cross-section in fb (no cuts)
-      scale(_h["ZZZZ"], crossSection()/picobarn/sumW()); // norm to generated cross-section in pb (after cuts)
+	
+		for (auto hist : _h) {
+			scale(hist.second, crossSection() / sumOfWeights());
+		}
 
     }
 
@@ -101,8 +113,8 @@ namespace Rivet {
     /// @name Histograms
     ///@{
     map<string, Histo1DPtr> _h;
-    map<string, Profile1DPtr> _p;
-    map<string, CounterPtr> _c;
+    //map<string, Profile1DPtr> _p;
+    //map<string, CounterPtr> _c;
     ///@}
 
 
