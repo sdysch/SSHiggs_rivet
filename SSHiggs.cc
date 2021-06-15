@@ -51,6 +51,21 @@ namespace Rivet {
       DressedLeptons dressed_leps(photons, bare_leps, 0.1, lepton_cuts);
       declare(dressed_leps, "leptons");
 
+      IdentifiedFinalState electrons(fs);
+      electrons.acceptIdPair(PID::ELECTRON);
+      declare(electrons, "Electrons");
+      
+      IdentifiedFinalState muons(fs);
+      muons.acceptIdPair(PID::MUON);
+      declare(muons, "Muons");
+
+      DressedLeptons dressed_muons(photons, muons, 0.1, Cuts::open(), true, false);
+      declare(dressed_muons, "DressedMuons");
+
+      DressedLeptons dressed_electrons(photons, electrons, 0.1, Cuts::open(), true, false);
+      declare(dressed_electrons, "DressedElectrons");
+
+
       // Missing momentum
       declare(MissingMomentum(fs), "MET");
 
@@ -60,14 +75,28 @@ namespace Rivet {
       book(_h["l0_pt"], "l0_pt", 200, 0.0, 1000.0);
       book(_h["l1_pt"], "l1_pt", 200, 0.0, 1000.0);
 
+      book(_h["el0_pt"], "el0_pt", 200, 0.0, 1000.0);
+      book(_h["el1_pt"], "el1_pt", 200, 0.0, 1000.0);
+      
+      book(_h["mu0_pt"], "mu0_pt", 200, 0.0, 1000.0);
+      book(_h["mu1_pt"], "mu1_pt", 200, 0.0, 1000.0);
+
       // MET
       book(_h["MET"], "MET", 100, 0.0, 500.0);
+
+      // object multiplicity
+      book(_h["Njet"], "n_j", 11, -0.5, 10.5);
+      book(_h["Nlepton"], "n_l", 11, -0.5, 10.5);
+      book(_h["Nmuon"], "n_mu", 11, -0.5, 10.5);
+      book(_h["Nelectron"], "n_e", 11, -0.5, 10.5);
     }
 
 
     /// Perform the per-event analysis
     void analyze(const Event& event) {
 
+      // === retrieve objects ===
+      
       // Retrieve dressed leptons, sorted by pT
       vector<DressedLepton> leptons = apply<DressedLeptons>(event, "leptons").dressedLeptons(ptsorter);
 
@@ -82,6 +111,9 @@ namespace Rivet {
         return  jet.bTagged(Cuts::pT > 5*GeV && Cuts::abseta < 2.5);
       });
 
+      std::vector<DressedLepton> muons = apply<DressedLeptons>(event, "DressedMuons").dressedLeptons(ptsorter);
+      std::vector<DressedLepton> electrons = apply<DressedLeptons>(event, "DressedElectrons").dressedLeptons(ptsorter);
+
       // Veto event if there are no b-jets
       //if (bjets.empty())  vetoEvent;
 
@@ -89,11 +121,43 @@ namespace Rivet {
       //if (apply<MissingMomentum>(event, "MET").missingPt() < 30*GeV)  vetoEvent;
       const auto MET = apply<MissingMomentum>(event, "MET").missingPt();
 
+      // object multiplicities
+      const int nLeptons   = leptons.size();
+      const int nMuons     = muons.size();
+      const int nElectrons = electrons.size();
+      const int nJets      = jets.size();
+
       // === fill histograms ===
-      _h["l0_pt"]->fill(leptons[0].pT()/GeV);
-      _h["l1_pt"]->fill(leptons[1].pT()/GeV);
+      if (nLeptons > 0) {
+         _h["l0_pt"]->fill(leptons[0].pT()/GeV);
+      }
+
+      if (nLeptons > 1) {
+         _h["l1_pt"]->fill(leptons[1].pT()/GeV);
+      }
+
+      if (nElectrons > 0) {
+         _h["el0_pt"]->fill(electrons[0].pT()/GeV);
+      }
+
+      if (nElectrons > 1) {
+         _h["el1_pt"]->fill(electrons[1].pT()/GeV);
+      }
+
+      if (nMuons > 0) {
+         _h["mu0_pt"]->fill(muons[0].pT()/GeV);
+      }
+
+      if (nMuons > 1) {
+         _h["mu1_pt"]->fill(muons[1].pT()/GeV);
+      }
 
       _h["MET"]->fill(MET/GeV);
+
+      _h["Njet"]->fill(nJets);
+      _h["Nlepton"]->fill(nLeptons);
+      _h["Nmuon"]->fill(nMuons);
+      _h["Nelectron"]->fill(nElectrons);
 
     }
 
