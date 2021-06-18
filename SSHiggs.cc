@@ -169,6 +169,9 @@ namespace Rivet {
 			scale(hist.second, crossSection() / sumOfWeights());
 		}
 
+		// write to std::cout so that we can capture xsec info
+		std::cout << "Rivet cross section: " << crossSection() << std::endl;
+
     }
 
     ///@}

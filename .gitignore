@@ -6,3 +6,7 @@
 *.png
 *.dat
 *.pdf
+
+*.__afs*
+
+xsec/*.txt
