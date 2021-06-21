@@ -89,6 +89,13 @@ namespace Rivet {
       book(_h["Nlepton"], "n_l", 11, -0.5, 10.5);
       book(_h["Nmuon"], "n_mu", 11, -0.5, 10.5);
       book(_h["Nelectron"], "n_e", 11, -0.5, 10.5);
+
+      // mass plots
+
+      // mass of lead two positive charge leptons
+      book(_h["m_pos_leptons"], "m_pos_leptons", 200, 0., 1000.);
+      // mass of lead two negative charge leptons
+      book(_h["m_neg_leptons"], "m_neg_leptons", 200, 0., 1000.);
     }
 
 
@@ -114,6 +121,8 @@ namespace Rivet {
       std::vector<DressedLepton> muons = apply<DressedLeptons>(event, "DressedMuons").dressedLeptons(ptsorter);
       std::vector<DressedLepton> electrons = apply<DressedLeptons>(event, "DressedElectrons").dressedLeptons(ptsorter);
 
+      // === event selection ===
+
       // Veto event if there are no b-jets
       //if (bjets.empty())  vetoEvent;
 
@@ -126,6 +135,31 @@ namespace Rivet {
       const int nMuons     = muons.size();
       const int nElectrons = electrons.size();
       const int nJets      = jets.size();
+
+      // calculate di-lepton masses (for four-lepton events)
+      double m_pos_leptons = -999;
+      double m_neg_leptons = -999;
+
+      // first, sort leptons into positive and negative vectors
+      std::vector<DressedLepton> positiveLeptons;
+      std::vector<DressedLepton> negativeLeptons;
+      for (auto lep : leptons) {
+         if (lep.charge() > 0) {
+            positiveLeptons.push_back(lep);
+         }
+         if (lep.charge() < 0) {
+            negativeLeptons.push_back(lep);
+         }
+      }
+
+      // calculate dilepton mass, if we have at least two leptons
+      if (positiveLeptons.size() >= 2) {
+         m_pos_leptons = ( positiveLeptons[0].momentum() + positiveLeptons[1].momentum() ).mass();
+      }
+
+      if (negativeLeptons.size() >= 2) {
+         m_neg_leptons = ( negativeLeptons[0].momentum() + negativeLeptons[1].momentum() ).mass();
+      }
 
       // === fill histograms ===
       if (nLeptons > 0) {
@@ -158,6 +192,9 @@ namespace Rivet {
       _h["Nlepton"]->fill(nLeptons);
       _h["Nmuon"]->fill(nMuons);
       _h["Nelectron"]->fill(nElectrons);
+
+      _h["m_pos_leptons"]->fill(m_pos_leptons);
+      _h["m_neg_leptons"]->fill(m_neg_leptons);
 
     }
 

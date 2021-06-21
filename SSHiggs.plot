@@ -63,3 +63,15 @@ XLabel=$n_e$
 YLabel=Events
 ErrorBars=1
 END PLOT
+
+BEGIN PLOT /SSHiggs/m_pos_leptons
+XLabel=$m_\ell^{++}$ [GeV]
+YLabel=Events
+ErrorBars=1
+END PLOT
+
+BEGIN PLOT /SSHiggs/m_neg_leptons
+XLabel=$m_\ell^{--}$ [GeV]
+YLabel=Events
+ErrorBars=1
+END PLOT
