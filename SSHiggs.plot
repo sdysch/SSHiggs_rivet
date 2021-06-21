@@ -1,41 +1,55 @@
-BEGIN PLOT SSHiggs/l0_pt
-XLabel=[Leading lepton p_{T} [GeV]]
+# NOTE, be sure each plot has a leading "/". E.g. "/SSHiggs/l0_pt"
+
+BEGIN PLOT /SSHiggs/l0_pt
+XLabel=$p^{l0}_{T}$ [GeV]
 YLabel=Events
 ErrorBars=1
 END PLOT
 
 BEGIN PLOT /SSHiggs/l1_pt
-XLabel=[Sub-leading lepton p_{T} [GeV]]
+XLabel=$p^{l1}_{T}$ [GeV]
 YLabel=Events
 ErrorBars=1
 END PLOT
 
-BEGIN PLOT /SSHiggs/el0_pt
-XLabel=[Leading electron p_{T} [GeV]]
+BEGIN PLOT /SSHiggs/l2_pt
+XLabel=$p^{l2}_{T}$ [GeV]
 YLabel=Events
 ErrorBars=1
 END PLOT
 
-BEGIN PLOT /SSHiggs/el1_pt
-XLabel=[Sub-leading electron p_{T} [GeV]]
+BEGIN PLOT /SSHiggs/l3_pt
+XLabel=$p^{l3}_{T}$ [GeV]
 YLabel=Events
 ErrorBars=1
 END PLOT
 
-BEGIN PLOT /SSHiggs/mu0_pt
-XLabel=[Leading muon p_{T} [GeV]]
+BEGIN PLOT /SSHiggs/l0_eta
+XLabel=[$|\eta_{l0}|$]
 YLabel=Events
 ErrorBars=1
 END PLOT
 
-BEGIN PLOT /SSHiggs/mu1_pt
-XLabel=[Sub-leading muon p_{T} [GeV]]
+BEGIN PLOT /SSHiggs/l1_eta
+XLabel=$|\eta_{l1}|$
+YLabel=Events
+ErrorBars=1
+END PLOT
+
+BEGIN PLOT /SSHiggs/l2_eta
+XLabel=$|\eta_{l2}|$
+YLabel=Events
+ErrorBars=1
+END PLOT
+
+BEGIN PLOT /SSHiggs/l3_eta
+XLabel=$|\eta_{l3}|$
 YLabel=Events
 ErrorBars=1
 END PLOT
 
 BEGIN PLOT /SSHiggs/MET
-XLabel=[Missing E_{T} [GeV]]
+XLabel=Missing E_{T} [GeV]
 YLabel=Events
 ErrorBars=1
 END PLOT

@@ -74,12 +74,35 @@ namespace Rivet {
       // lepton pT
       book(_h["l0_pt"], "l0_pt", 200, 0.0, 1000.0);
       book(_h["l1_pt"], "l1_pt", 200, 0.0, 1000.0);
+      book(_h["l2_pt"], "l2_pt", 200, 0.0, 1000.0);
+      book(_h["l3_pt"], "l3_pt", 200, 0.0, 1000.0);
 
       book(_h["el0_pt"], "el0_pt", 200, 0.0, 1000.0);
       book(_h["el1_pt"], "el1_pt", 200, 0.0, 1000.0);
+      book(_h["el2_pt"], "el2_pt", 200, 0.0, 1000.0);
+      book(_h["el3_pt"], "el3_pt", 200, 0.0, 1000.0);
       
       book(_h["mu0_pt"], "mu0_pt", 200, 0.0, 1000.0);
       book(_h["mu1_pt"], "mu1_pt", 200, 0.0, 1000.0);
+      book(_h["mu2_pt"], "mu2_pt", 200, 0.0, 1000.0);
+      book(_h["mu3_pt"], "mu3_pt", 200, 0.0, 1000.0);
+
+      // lepton eta
+      book(_h["l0_eta"], "l0_eta", 50, -2.5, 2.5);
+      book(_h["l1_eta"], "l1_eta", 50, -2.5, 2.5);
+      book(_h["l2_eta"], "l2_eta", 50, -2.5, 2.5);
+      book(_h["l3_eta"], "l3_eta", 50, -2.5, 2.5);
+
+      book(_h["el0_eta"], "el0_eta", 50, -2.5, 2.5);
+      book(_h["el1_eta"], "el1_eta", 50, -2.5, 2.5);
+      book(_h["el2_eta"], "el2_eta", 50, -2.5, 2.5);
+      book(_h["el3_eta"], "el3_eta", 50, -2.5, 2.5);
+
+      book(_h["mu0_eta"], "mu0_eta", 50, -2.5, 2.5);
+      book(_h["mu1_eta"], "mu1_eta", 50, -2.5, 2.5);
+      book(_h["mu2_eta"], "mu2_eta", 50, -2.5, 2.5);
+      book(_h["mu3_eta"], "mu3_eta", 50, -2.5, 2.5);
+
 
       // MET
       book(_h["MET"], "MET", 100, 0.0, 500.0);
@@ -162,28 +185,32 @@ namespace Rivet {
       }
 
       // === fill histograms ===
-      if (nLeptons > 0) {
-         _h["l0_pt"]->fill(leptons[0].pT()/GeV);
-      }
+	 // lepton, electron, muon pT, eta
+      for (int i = 0; i < 3; ++i) {
 
-      if (nLeptons > 1) {
-         _h["l1_pt"]->fill(leptons[1].pT()/GeV);
-      }
+         // leptons
+         if (nLeptons > i) {
+            const std::string lepPtString = "l" + std::to_string(i) + "_pt";
+            const std::string lepEtaString = "l" + std::to_string(i) + "_eta";
+            _h[lepPtString]->fill(leptons[i].pT()/GeV);
+            _h[lepEtaString]->fill(leptons[i].eta());
+         }
 
-      if (nElectrons > 0) {
-         _h["el0_pt"]->fill(electrons[0].pT()/GeV);
-      }
+         // electrons
+         if (nElectrons > i) {
+            const std::string elPtString = "el" + std::to_string(i) + "_pt";
+            const std::string elEtaString = "el" + std::to_string(i) + "_eta";
+            _h[elPtString]->fill(electrons[i].pT()/GeV);
+            _h[elEtaString]->fill(electrons[i].eta());
+         }
 
-      if (nElectrons > 1) {
-         _h["el1_pt"]->fill(electrons[1].pT()/GeV);
-      }
-
-      if (nMuons > 0) {
-         _h["mu0_pt"]->fill(muons[0].pT()/GeV);
-      }
-
-      if (nMuons > 1) {
-         _h["mu1_pt"]->fill(muons[1].pT()/GeV);
+         // muons
+         if (nMuons > i) {
+            const std::string muPtString = "mu" + std::to_string(i) + "_pt";
+            const std::string muEtaString = "mu" + std::to_string(i) + "_eta";
+            _h[muPtString]->fill(muons[i].pT()/GeV);
+            _h[muEtaString]->fill(muons[i].eta());
+         }
       }
 
       _h["MET"]->fill(MET/GeV);
