@@ -27,6 +27,7 @@ for mass in ${MASSES[@]}; do
 	#echo $CMD
 
 	LOGFILE="/tmp/sdysch/log_${mass}"
+	[ -f $LOGFILE ] && rm -f $LOGFILE
 	$CMD | tee $LOGFILE
 	#$CMD
 
