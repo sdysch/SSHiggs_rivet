@@ -5,35 +5,30 @@ NC="\033[0m"
 CYAN="\033[0;36m"
 GREEN="\033[0;32m"
 
-XSECFILE="xsec/xchan_Z.txt"
-# remove cross section file from previous runs
-[ -f $XSECFILE ] && rm -f $XSECFILE
-
-MASSES=(100 200 300 400 500 600 700 800)
 
 BASECMD="rivet --analysis=SSHiggs --nominal-weight Weight_MERGING=0.000 --skip-weights"
-OUTPUTPREFIX="outputs/schan_ZGamma_ll_eemumu_MHPPL_"
-INPUTFILEBASE="/eos/user/s/sdysch/SSHiggs/outputs/schan_ZGamma_ll_eemumu_MHPPL_"
+INPUTFILEBASE="/eos/user/s/sdysch/SSHiggs/outputs/schan_ZGamma_ll_eemumu/Events/"
 
 # option to debug with $1 events
 [ $1 ] && INFO "Restricting to only $1 events" && BASECMD="$BASECMD -n $1"
 
-for mass in ${MASSES[@]}; do
-	OUTPUTFILE="${OUTPUTPREFIX}${mass}GEV.yoda"
-	INPUTFILE="${INPUTFILEBASE}${mass}GEV/Events/run_01/tag_1_pythia8_events.hepmc.gz"
-	SUFFIX="--histo-file $OUTPUTFILE --pwd ${INPUTFILE}"
+CMD100GEV="${BASECMD} --histo-file outputs/schan_ZGamma_ll_eemumu_MHPPL_100GEV.yoda --pwd ${INPUTFILEBASE}/run_01/tag_1_pythia8_events.hepmc.gz"
+CMD200GEV="${BASECMD} --histo-file outputs/schan_ZGamma_ll_eemumu_MHPPL_200GEV.yoda --pwd ${INPUTFILEBASE}/run_02/tag_1_pythia8_events.hepmc.gz"
+CMD300GEV="${BASECMD} --histo-file outputs/schan_ZGamma_ll_eemumu_MHPPL_300GEV.yoda --pwd ${INPUTFILEBASE}/run_03/tag_1_pythia8_events.hepmc.gz"
+CMD400GEV="${BASECMD} --histo-file outputs/schan_ZGamma_ll_eemumu_MHPPL_400GEV.yoda --pwd ${INPUTFILEBASE}/run_04/tag_1_pythia8_events.hepmc.gz"
+CMD500GEV="${BASECMD} --histo-file outputs/schan_ZGamma_ll_eemumu_MHPPL_500GEV.yoda --pwd ${INPUTFILEBASE}/run_05/tag_1_pythia8_events.hepmc.gz"
+CMD600GEV="${BASECMD} --histo-file outputs/schan_ZGamma_ll_eemumu_MHPPL_600GEV.yoda --pwd ${INPUTFILEBASE}/run_06/tag_1_pythia8_events.hepmc.gz"
+CMD700GEV="${BASECMD} --histo-file outputs/schan_ZGamma_ll_eemumu_MHPPL_700GEV.yoda --pwd ${INPUTFILEBASE}/run_07/tag_1_pythia8_events.hepmc.gz"
+CMD800GEV="${BASECMD} --histo-file outputs/schan_ZGamma_ll_eemumu_MHPPL_800GEV.yoda --pwd ${INPUTFILEBASE}/run_08/tag_1_pythia8_events.hepmc.gz"
 
-	CMD="${BASECMD} ${SUFFIX}"
-	#echo $CMD
-
-	LOGFILE="/tmp/sdysch/log_${mass}"
-	[ -f $LOGFILE ] && rm -f $LOGFILE
-	$CMD | tee $LOGFILE
-	#$CMD
-
-	# parse log file for cross section
-	grep "Rivet cross section:" $LOGFILE | awk -F ": " '{print $2}' >> $XSECFILE
-done
+$CMD100GEV
+$CMD200GEV
+$CMD300GEV
+$CMD400GEV
+$CMD500GEV
+$CMD600GEV
+$CMD700GEV
+$CMD800GEV
 
 function INFO() {
 	echo -e "${GREEN}[INFO] $1 ${NC}"
