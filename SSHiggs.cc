@@ -103,6 +103,18 @@ namespace Rivet {
       book(_h["mu2_eta"], "mu2_eta", 50, -2.5, 2.5);
       book(_h["mu3_eta"], "mu3_eta", 50, -2.5, 2.5);
 
+      // jet pT
+      book(_h["j0_pt"], "j0_pt", 200, 0.0, 1000.0);
+      book(_h["j1_pt"], "j1_pt", 200, 0.0, 1000.0);
+
+      // jet eta
+      book(_h["j0_eta"], "j0_eta", 100, -4.5, 4.5);
+      book(_h["j1_eta"], "j1_eta", 100, -4.5, 4.5);
+      
+      // jet rapidity
+      book(_h["j0_y"], "j0_y", 100, -4.5, 4.5);
+      book(_h["j1_y"], "j1_y", 100, -4.5, 4.5);
+
 
       // MET
       book(_h["MET"], "MET", 100, 0.0, 500.0);
@@ -211,6 +223,19 @@ namespace Rivet {
             _h[muPtString]->fill(muons[i].pT()/GeV);
             _h[muEtaString]->fill(muons[i].eta());
          }
+      }
+
+      // jets
+      if (nJets > 0) {
+         _h["j0_pt"]->fill(jets[0].pT()/GeV);
+         _h["j0_eta"]->fill(jets[0].eta());
+         _h["j0_y"]->fill(jets[0].rapidity());
+      }
+
+      if (nJets > 1) {
+         _h["j1_pt"]->fill(jets[1].pT()/GeV);
+         _h["j1_eta"]->fill(jets[1].eta());
+         _h["j1_y"]->fill(jets[1].rapidity());
       }
 
       _h["MET"]->fill(MET/GeV);

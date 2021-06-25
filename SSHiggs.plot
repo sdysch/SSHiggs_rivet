@@ -25,25 +25,61 @@ ErrorBars=1
 END PLOT
 
 BEGIN PLOT /SSHiggs/l0_eta
-XLabel=[$|\eta_{l0}|$]
+XLabel=$\eta_{l0}$
 YLabel=Events
 ErrorBars=1
 END PLOT
 
 BEGIN PLOT /SSHiggs/l1_eta
-XLabel=$|\eta_{l1}|$
+XLabel=$\eta_{l1}$
 YLabel=Events
 ErrorBars=1
 END PLOT
 
 BEGIN PLOT /SSHiggs/l2_eta
-XLabel=$|\eta_{l2}|$
+XLabel=$\eta_{l2}$
 YLabel=Events
 ErrorBars=1
 END PLOT
 
 BEGIN PLOT /SSHiggs/l3_eta
-XLabel=$|\eta_{l3}|$
+XLabel=$\eta_{l3}$
+YLabel=Events
+ErrorBars=1
+END PLOT
+
+BEGIN PLOT /SSHiggs/j0_pt
+XLabel=$p^{j0}_{T}$ [GeV]
+YLabel=Events
+ErrorBars=1
+END PLOT
+
+BEGIN PLOT /SSHiggs/j1_pt
+XLabel=$p^{j1}_{T}$ [GeV]
+YLabel=Events
+ErrorBars=1
+END PLOT
+
+BEGIN PLOT /SSHiggs/j0_eta
+XLabel=$\eta_{j0}$
+YLabel=Events
+ErrorBars=1
+END PLOT
+
+BEGIN PLOT /SSHiggs/j1_eta
+XLabel=$\eta_{j1}$
+YLabel=Events
+ErrorBars=1
+END PLOT
+
+BEGIN PLOT /SSHiggs/j0_y
+XLabel=$y_{j0}$
+YLabel=Events
+ErrorBars=1
+END PLOT
+
+BEGIN PLOT /SSHiggs/j1_y
+XLabel=$y_{j1}$
 YLabel=Events
 ErrorBars=1
 END PLOT
